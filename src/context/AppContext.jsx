@@ -1,11 +1,15 @@
 import React, { createContext, useContext, useReducer, useCallback } from 'react';
-import { sampleProjects, sampleProducts, sampleOrders, sampleUsers } from '../data/sampleData';
+import {
+  sampleProjects, sampleProducts, sampleOrders, sampleUsers,
+  sampleCustomers, sampleInventory, sampleRepairs, sampleAppraisals,
+  sampleCustomOrders, sampleNotifications,
+} from '../data/sampleData';
 
 const AppContext = createContext(null);
 
 const initialState = {
-  activeRoute: 'projects',
-  selectedProjectId: 'PRJ-001',
+  activeRoute: 'dashboard',
+  selectedProjectId: null,
   projectTab: 'overview',
   selectedProductId: null,
   productCollectionFilter: 'all',
@@ -13,11 +17,20 @@ const initialState = {
   orderPaymentFilter: 'all',
   orderSort: 'newest',
   orderSearch: '',
+  searchQuery: '',
+  sidebarCollapsed: false,
 
   projects: sampleProjects,
   products: sampleProducts,
   orders: sampleOrders,
   users: sampleUsers,
+  customers: sampleCustomers,
+  inventory: sampleInventory,
+  repairs: sampleRepairs,
+  appraisals: sampleAppraisals,
+  customOrders: sampleCustomOrders,
+  notifications: sampleNotifications,
+  plugins: [],
 
   modal: { open: false, title: '', content: null, footer: null },
   toasts: [],
@@ -79,6 +92,56 @@ function appReducer(state, action) {
           o.id === action.payload.id ? { ...o, ...action.payload } : o
         ),
       };
+
+    case 'SET_SEARCH':
+      return { ...state, searchQuery: action.payload };
+
+    case 'TOGGLE_SIDEBAR':
+      return { ...state, sidebarCollapsed: !state.sidebarCollapsed };
+
+    case 'ADD_CUSTOMER':
+      return { ...state, customers: [...state.customers, action.payload] };
+
+    case 'ADD_INVENTORY_ITEM':
+      return { ...state, inventory: [...state.inventory, action.payload] };
+
+    case 'UPDATE_REPAIR':
+      return {
+        ...state,
+        repairs: state.repairs.map(r =>
+          r.id === action.payload.id ? { ...r, ...action.payload } : r
+        ),
+      };
+
+    case 'UPDATE_APPRAISAL':
+      return {
+        ...state,
+        appraisals: state.appraisals.map(a =>
+          a.id === action.payload.id ? { ...a, ...action.payload } : a
+        ),
+      };
+
+    case 'UPDATE_CUSTOM_ORDER':
+      return {
+        ...state,
+        customOrders: state.customOrders.map(co =>
+          co.id === action.payload.id ? { ...co, ...action.payload } : co
+        ),
+      };
+
+    case 'MARK_NOTIFICATION_READ':
+      return {
+        ...state,
+        notifications: state.notifications.map(n =>
+          n.id === action.payload ? { ...n, read: true } : n
+        ),
+      };
+
+    case 'REGISTER_PLUGIN':
+      return { ...state, plugins: [...state.plugins, action.payload] };
+
+    case 'UNREGISTER_PLUGIN':
+      return { ...state, plugins: state.plugins.filter(p => p.id !== action.payload) };
 
     default:
       return state;
