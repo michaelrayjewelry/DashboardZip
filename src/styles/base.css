@@ -57,8 +57,12 @@ ul, ol {
 }
 
 /* ── Images ── */
-img, svg {
+img {
     display: block;
+    max-width: 100%;
+}
+
+svg {
     max-width: 100%;
 }
 

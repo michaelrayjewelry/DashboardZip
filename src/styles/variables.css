@@ -1,11 +1,6 @@
 /* ==========================================================================
-   Zip Jeweler Dashboard — Design Tokens & CSS Custom Properties
-
-   Design Philosophy:
-   - Luxury meets functionality: warm golds and deep neutrals
-   - High contrast for readability in retail environments
-   - Consistent spacing scale (4px base unit)
-   - Accessible color combinations (WCAG AA minimum)
+   Zip Jeweler Dashboard — Design Tokens
+   Luxury editorial design with refined typography
    ========================================================================== */
 
 :root {
@@ -52,18 +47,17 @@
     --color-info-dark:     #145ea8;
 
     /* ── Primary Theme ── */
-    --color-primary:       var(--color-gold-600);
+    --color-primary:       #8b7a2f;
     --color-primary-light: var(--color-gold-100);
     --color-primary-dark:  var(--color-gold-800);
-    --color-primary-hover: var(--color-gold-700);
+    --color-primary-hover: #7a6b28;
 
     /* ── Surfaces ── */
     --surface-base:        var(--color-neutral-0);
     --surface-raised:      var(--color-neutral-0);
     --surface-overlay:     var(--color-neutral-0);
     --surface-sunken:      var(--color-neutral-50);
-    --surface-sidebar:     var(--color-neutral-900);
-    --surface-topbar:      var(--color-neutral-0);
+    --surface-sidebar:     #1a1a1a;
 
     /* ── Text ── */
     --text-primary:   var(--color-neutral-800);
@@ -71,19 +65,18 @@
     --text-muted:     var(--color-neutral-400);
     --text-inverse:   var(--color-neutral-0);
     --text-link:      var(--color-primary);
-    --text-on-sidebar: var(--color-neutral-300);
 
     /* ── Borders ── */
     --border-color:       var(--color-neutral-200);
     --border-color-light: var(--color-neutral-100);
     --border-color-focus: var(--color-primary);
     --border-radius-sm:   4px;
-    --border-radius-md:   8px;
-    --border-radius-lg:   12px;
+    --border-radius-md:   6px;
+    --border-radius-lg:   10px;
     --border-radius-xl:   16px;
     --border-radius-full: 9999px;
 
-    /* ── Spacing (4px base) ── */
+    /* ── Spacing ── */
     --space-1:  4px;
     --space-2:  8px;
     --space-3:  12px;
@@ -96,26 +89,27 @@
     --space-16: 64px;
 
     /* ── Typography ── */
-    --font-family:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-heading: 'Cormorant Garamond', 'Georgia', 'Times New Roman', serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
-    --text-xs:    0.75rem;    /* 12px */
-    --text-sm:    0.8125rem;  /* 13px */
-    --text-base:  0.875rem;   /* 14px */
-    --text-md:    1rem;       /* 16px */
-    --text-lg:    1.125rem;   /* 18px */
-    --text-xl:    1.25rem;    /* 20px */
-    --text-2xl:   1.5rem;     /* 24px */
-    --text-3xl:   1.875rem;   /* 30px */
+    --text-xs:    0.75rem;
+    --text-sm:    0.8125rem;
+    --text-base:  0.875rem;
+    --text-md:    1rem;
+    --text-lg:    1.125rem;
+    --text-xl:    1.25rem;
+    --text-2xl:   1.5rem;
+    --text-3xl:   1.875rem;
+    --text-4xl:   2.25rem;
 
     --font-weight-normal: 400;
     --font-weight-medium: 500;
     --font-weight-semibold: 600;
-    --font-weight-bold:   700;
+    --font-weight-bold: 700;
 
     --line-height-tight:  1.25;
     --line-height-normal: 1.5;
-    --line-height-loose:  1.75;
 
     /* ── Shadows ── */
     --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.04);
@@ -130,16 +124,13 @@
     --transition-slow:   300ms ease;
 
     /* ── Layout ── */
-    --topbar-height:  56px;
-    --sidebar-width:  240px;
-    --sidebar-width-collapsed: 64px;
+    --sidebar-width: 220px;
 
-    /* ── Z-Index Scale ── */
+    /* ── Z-Index ── */
     --z-base:     1;
     --z-dropdown: 100;
     --z-sticky:   200;
     --z-sidebar:  300;
-    --z-topbar:   400;
     --z-modal:    500;
     --z-toast:    600;
 }
