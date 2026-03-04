@@ -303,25 +303,25 @@
 }
 
 /* ── Sidebar Collapsed State ── */
-body.sidebar-collapsed .sidebar {
+.sidebar-collapsed .sidebar {
     width: var(--sidebar-width-collapsed);
 }
 
-body.sidebar-collapsed .sidebar__item span,
-body.sidebar-collapsed .sidebar__badge,
-body.sidebar-collapsed .sidebar__version {
+.sidebar-collapsed .sidebar__item span,
+.sidebar-collapsed .sidebar__badge,
+.sidebar-collapsed .sidebar__version {
     display: none;
 }
 
-body.sidebar-collapsed .sidebar__item {
+.sidebar-collapsed .sidebar__item {
     justify-content: center;
     padding: var(--space-2);
 }
 
-body.sidebar-collapsed .sidebar__item svg {
+.sidebar-collapsed .sidebar__item svg {
     margin: 0;
 }
 
-body.sidebar-collapsed .main {
+.sidebar-collapsed .main {
     margin-left: var(--sidebar-width-collapsed);
 }
