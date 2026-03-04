@@ -90,7 +90,7 @@ export function AppProvider({ children }) {
 
   const toast = useCallback((message, type = 'info', duration = 4000) => {
     const id = Date.now();
-    dispatch({ type: 'ADD_TOAST', payload: { message, type, duration } });
+    dispatch({ type: 'ADD_TOAST', payload: { id, message, type, duration } });
     setTimeout(() => dispatch({ type: 'REMOVE_TOAST', payload: id }), duration);
   }, []);
 

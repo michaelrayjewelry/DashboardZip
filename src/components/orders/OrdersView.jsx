@@ -199,7 +199,7 @@ export default function OrdersView() {
       </div>
 
       <div className="orders-footer">
-        <span>{filtered.length} {state.orderPipelineFilter === 'all' ? 'ACTIVE' : ''} ORDERS</span>
+        <span>{filtered.length} {state.orderPipelineFilter !== 'all' ? ORDER_STAGE_LABELS[state.orderPipelineFilter].toUpperCase() : ''} ORDERS</span>
         <span>&middot;</span>
         <span>{formatCurrency(filtered.reduce((s, o) => s + o.total, 0))} TOTAL REVENUE</span>
       </div>

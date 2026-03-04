@@ -661,6 +661,12 @@
     gap: var(--space-3);
 }
 
+.orders-toolbar__right {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
 .orders-table-wrapper {
     background: var(--surface-raised);
     border: 1px solid var(--border-color-light);
