@@ -1,0 +1,1 @@
+(contents of ZipJeweler_Architecture_Blueprint.md)
