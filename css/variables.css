@@ -1,0 +1,145 @@
+/* ==========================================================================
+   Zip Jeweler Dashboard — Design Tokens & CSS Custom Properties
+
+   Design Philosophy:
+   - Luxury meets functionality: warm golds and deep neutrals
+   - High contrast for readability in retail environments
+   - Consistent spacing scale (4px base unit)
+   - Accessible color combinations (WCAG AA minimum)
+   ========================================================================== */
+
+:root {
+    /* ── Brand Colors ── */
+    --color-gold-50:  #fefce8;
+    --color-gold-100: #fef9c3;
+    --color-gold-200: #fef08a;
+    --color-gold-300: #fde047;
+    --color-gold-400: #facc15;
+    --color-gold-500: #c8a415;
+    --color-gold-600: #a16207;
+    --color-gold-700: #854d0e;
+    --color-gold-800: #713f12;
+    --color-gold-900: #5c3310;
+
+    /* ── Neutral Palette ── */
+    --color-neutral-0:   #ffffff;
+    --color-neutral-50:  #f8f9fa;
+    --color-neutral-100: #f1f3f5;
+    --color-neutral-200: #e9ecef;
+    --color-neutral-300: #dee2e6;
+    --color-neutral-400: #adb5bd;
+    --color-neutral-500: #868e96;
+    --color-neutral-600: #495057;
+    --color-neutral-700: #343a40;
+    --color-neutral-800: #212529;
+    --color-neutral-900: #0d1117;
+
+    /* ── Semantic Colors ── */
+    --color-success-light: #d3f9d8;
+    --color-success:       #2f9e44;
+    --color-success-dark:  #1b7a30;
+
+    --color-warning-light: #fff3bf;
+    --color-warning:       #e67700;
+    --color-warning-dark:  #b35c00;
+
+    --color-danger-light:  #ffe3e3;
+    --color-danger:        #e03131;
+    --color-danger-dark:   #b02525;
+
+    --color-info-light:    #d0ebff;
+    --color-info:          #1971c2;
+    --color-info-dark:     #145ea8;
+
+    /* ── Primary Theme ── */
+    --color-primary:       var(--color-gold-600);
+    --color-primary-light: var(--color-gold-100);
+    --color-primary-dark:  var(--color-gold-800);
+    --color-primary-hover: var(--color-gold-700);
+
+    /* ── Surfaces ── */
+    --surface-base:        var(--color-neutral-0);
+    --surface-raised:      var(--color-neutral-0);
+    --surface-overlay:     var(--color-neutral-0);
+    --surface-sunken:      var(--color-neutral-50);
+    --surface-sidebar:     var(--color-neutral-900);
+    --surface-topbar:      var(--color-neutral-0);
+
+    /* ── Text ── */
+    --text-primary:   var(--color-neutral-800);
+    --text-secondary: var(--color-neutral-600);
+    --text-muted:     var(--color-neutral-400);
+    --text-inverse:   var(--color-neutral-0);
+    --text-link:      var(--color-primary);
+    --text-on-sidebar: var(--color-neutral-300);
+
+    /* ── Borders ── */
+    --border-color:       var(--color-neutral-200);
+    --border-color-light: var(--color-neutral-100);
+    --border-color-focus: var(--color-primary);
+    --border-radius-sm:   4px;
+    --border-radius-md:   8px;
+    --border-radius-lg:   12px;
+    --border-radius-xl:   16px;
+    --border-radius-full: 9999px;
+
+    /* ── Spacing (4px base) ── */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-8:  32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+
+    /* ── Typography ── */
+    --font-family:   'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono:     'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+
+    --text-xs:    0.75rem;    /* 12px */
+    --text-sm:    0.8125rem;  /* 13px */
+    --text-base:  0.875rem;   /* 14px */
+    --text-md:    1rem;       /* 16px */
+    --text-lg:    1.125rem;   /* 18px */
+    --text-xl:    1.25rem;    /* 20px */
+    --text-2xl:   1.5rem;     /* 24px */
+    --text-3xl:   1.875rem;   /* 30px */
+
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:   700;
+
+    --line-height-tight:  1.25;
+    --line-height-normal: 1.5;
+    --line-height-loose:  1.75;
+
+    /* ── Shadows ── */
+    --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md:  0 4px 6px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.04);
+    --shadow-lg:  0 10px 15px rgba(0, 0, 0, 0.06), 0 4px 6px rgba(0, 0, 0, 0.04);
+    --shadow-xl:  0 20px 25px rgba(0, 0, 0, 0.08), 0 8px 10px rgba(0, 0, 0, 0.04);
+
+    /* ── Transitions ── */
+    --transition-fast:   150ms ease;
+    --transition-base:   200ms ease;
+    --transition-slow:   300ms ease;
+
+    /* ── Layout ── */
+    --topbar-height:  56px;
+    --sidebar-width:  240px;
+    --sidebar-width-collapsed: 64px;
+
+    /* ── Z-Index Scale ── */
+    --z-base:     1;
+    --z-dropdown: 100;
+    --z-sticky:   200;
+    --z-sidebar:  300;
+    --z-topbar:   400;
+    --z-modal:    500;
+    --z-toast:    600;
+}
