@@ -2,6 +2,13 @@ import React from 'react';
 import { useApp } from '../../context/AppContext';
 import { PROJECT_STAGES, PROJECT_STAGE_LABELS } from '../../data/sampleData';
 import { formatCurrency } from '../../utils/formatters';
+import DesignTab from './tabs/DesignTab';
+import SpecificationsTab from './tabs/SpecificationsTab';
+import MaterialsTab from './tabs/MaterialsTab';
+import ManufacturingTab from './tabs/ManufacturingTab';
+import CommunicationTab from './tabs/CommunicationTab';
+import DocumentsTab from './tabs/DocumentsTab';
+import TimelineTab from './tabs/TimelineTab';
 
 const STAGE_ICONS = {
   concept: (
@@ -176,31 +183,22 @@ function ProjectTabContent({ project }) {
     case 'overview':
       return <ProjectOverview project={project} />;
     case 'design':
-      return <PlaceholderTab title="Design & Assets" description="CAD files, sketches, and design assets for this project" />;
+      return <DesignTab project={project} />;
     case 'specifications':
-      return <PlaceholderTab title="Specifications" description="Detailed technical specifications and measurements" />;
+      return <SpecificationsTab project={project} />;
     case 'materials':
-      return <PlaceholderTab title="Materials & Cost" description="Bill of materials, costs, and pricing breakdown" />;
+      return <MaterialsTab project={project} />;
     case 'manufacturing':
-      return <PlaceholderTab title="Manufacturing" description="Production notes, bench assignments, and workflow" />;
+      return <ManufacturingTab project={project} />;
     case 'communication':
-      return <PlaceholderTab title="Communication" description="Messages and correspondence with the client" />;
+      return <CommunicationTab project={project} />;
     case 'documents':
-      return <PlaceholderTab title="Documents" description="Contracts, invoices, and related documents" />;
+      return <DocumentsTab project={project} />;
     case 'timeline':
-      return <PlaceholderTab title="Timeline" description="Project timeline, milestones, and history" />;
+      return <TimelineTab project={project} />;
     default:
       return <ProjectOverview project={project} />;
   }
-}
-
-function PlaceholderTab({ title, description }) {
-  return (
-    <div className="placeholder-tab">
-      <h3>{title}</h3>
-      <p className="text-muted">{description}</p>
-    </div>
-  );
 }
 
 export default function ProjectsView() {

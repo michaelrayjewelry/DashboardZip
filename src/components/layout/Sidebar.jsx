@@ -23,15 +23,39 @@ const STAGE_COLORS = {
   delivered: '#22c55e',
 };
 
+const NAV_GROUPS = [
+  {
+    label: null,
+    items: [
+      { id: 'dashboard', label: 'DASHBOARD' },
+      { id: 'projects', label: 'PROJECTS' },
+      { id: 'products', label: 'PRODUCTS' },
+      { id: 'orders', label: 'ORDERS' },
+    ],
+  },
+  {
+    label: 'MANAGEMENT',
+    items: [
+      { id: 'customers', label: 'CUSTOMERS' },
+      { id: 'inventory', label: 'INVENTORY' },
+      { id: 'repairs', label: 'REPAIRS' },
+      { id: 'appraisals', label: 'APPRAISALS' },
+      { id: 'custom-orders', label: 'CUSTOM ORDERS' },
+    ],
+  },
+  {
+    label: 'SYSTEM',
+    items: [
+      { id: 'reports', label: 'REPORTS' },
+      { id: 'tools', label: 'TOOLS & PLUGINS' },
+      { id: 'settings', label: 'SETTINGS' },
+      { id: 'users', label: 'USERS' },
+    ],
+  },
+];
+
 export default function Sidebar() {
   const { state, dispatch } = useApp();
-
-  const mainNav = [
-    { id: 'projects', label: 'PROJECTS' },
-    { id: 'products', label: 'PRODUCTS' },
-    { id: 'orders', label: 'ORDERS' },
-    { id: 'users', label: 'USERS' },
-  ];
 
   function getOrderCountForStage(stage) {
     return state.orders.filter(o => o.stage === stage).length;
@@ -43,24 +67,31 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${state.sidebarCollapsed ? 'sidebar--collapsed' : ''}`}>
       <div className="sidebar__brand">
         <span className="sidebar__brand-zip">ZIP</span>
         <span className="sidebar__brand-jeweler">JEWELER</span>
       </div>
 
       <nav className="sidebar__nav">
-        <ul className="sidebar__menu">
-          {mainNav.map(item => (
-            <li
-              key={item.id}
-              className={`sidebar__item ${state.activeRoute === item.id ? 'sidebar__item--active' : ''}`}
-              onClick={() => dispatch({ type: 'SET_ROUTE', payload: item.id })}
-            >
-              {item.label}
-            </li>
-          ))}
-        </ul>
+        {NAV_GROUPS.map((group, gi) => (
+          <div key={gi} className="sidebar__group">
+            {group.label && (
+              <div className="sidebar__section-header">{group.label}</div>
+            )}
+            <ul className="sidebar__menu">
+              {group.items.map(item => (
+                <li
+                  key={item.id}
+                  className={`sidebar__item ${state.activeRoute === item.id ? 'sidebar__item--active' : ''}`}
+                  onClick={() => dispatch({ type: 'SET_ROUTE', payload: item.id })}
+                >
+                  {item.label}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
 
         {state.activeRoute === 'projects' && state.selectedProjectId && (
           <div className="sidebar__subnav">
@@ -122,6 +153,20 @@ export default function Sidebar() {
                   className={`sidebar__subitem ${state.productCollectionFilter === col ? 'sidebar__subitem--active' : ''}`}
                   onClick={() => dispatch({ type: 'SET_PRODUCT_COLLECTION_FILTER', payload: col })}
                 >
+                  {col}
+                  <span className="sidebar__count">{getProductCountForCollection(col)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {state.activeRoute === 'dashboard' && (
+          <div className="sidebar__subnav">
+            <div className="sidebar__subnav-header">COLLECTIONS</div>
+            <ul className="sidebar__submenu">
+              {COLLECTIONS.map(col => (
+                <li key={col} className="sidebar__subitem">
                   {col}
                   <span className="sidebar__count">{getProductCountForCollection(col)}</span>
                 </li>
