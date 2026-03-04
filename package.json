@@ -2,6 +2,7 @@
   "name": "zip-jeweler-dashboard",
   "version": "1.0.0",
   "private": true,
+  "homepage": "https://michaelrayjewelry.github.io/DashboardZip",
   "description": "Zip Jeweler Dashboard — Michael Ray Jewelry management platform",
   "scripts": {
     "dev": "react-scripts start",
