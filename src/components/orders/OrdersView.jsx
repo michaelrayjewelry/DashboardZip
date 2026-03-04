@@ -1,142 +1,207 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useApp } from '../../context/AppContext';
-import DataTable from '../common/DataTable';
-import StatusBadge from '../common/StatusBadge';
+import { ORDER_STAGES, ORDER_STAGE_LABELS } from '../../data/sampleData';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import { ORDER_STATUSES } from '../../data/sampleData';
 
-export default function OrdersView() {
-  const { state, dispatch, toast } = useApp();
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [paymentFilter, setPaymentFilter] = useState('All');
+const STAGE_COLORS = {
+  confirmed: '#3b82f6',
+  manufacturing: '#8b5cf6',
+  qc: '#f59e0b',
+  'auth-card': '#06b6d4',
+  packaging: '#10b981',
+  shipped: '#6366f1',
+  delivered: '#22c55e',
+};
 
-  const filtered = state.orders.filter(order => {
-    if (statusFilter !== 'All' && order.status !== statusFilter) return false;
-    if (paymentFilter !== 'All' && order.paymentStatus !== paymentFilter) return false;
-    return true;
-  });
-
-  const stats = useMemo(() => ({
-    total: state.orders.length,
-    pending: state.orders.filter(o => o.status === 'Pending').length,
-    processing: state.orders.filter(o => o.status === 'Processing').length,
-    completed: state.orders.filter(o => o.status === 'Completed').length,
-    revenue: state.orders.filter(o => o.status === 'Completed').reduce((s, o) => s + o.total, 0),
-  }), [state.orders]);
-
-  const columns = [
-    { key: 'id', label: 'Order #', width: '100px', render: val => <span className="font-medium">{val}</span> },
-    { key: 'customerName', label: 'Customer' },
-    {
-      key: 'items', label: 'Items', sortable: false,
-      render: (val) => (
-        <span className="truncate" style={{ maxWidth: '200px', display: 'inline-block' }}>
-          {val.map(i => i.name).join(', ')}
-        </span>
-      ),
-    },
-    { key: 'total', label: 'Total', width: '110px', render: val => formatCurrency(val) },
-    { key: 'status', label: 'Status', width: '130px', render: val => <StatusBadge status={val} /> },
-    { key: 'paymentStatus', label: 'Payment', width: '100px', render: val => <StatusBadge status={val} /> },
-    { key: 'orderDate', label: 'Date', width: '100px', render: val => formatDate(val) },
-  ];
-
-  function handleRowClick(order) {
-    dispatch({
-      type: 'OPEN_MODAL',
-      payload: {
-        title: `Order ${order.id}`,
-        content: <OrderDetail order={order} dispatch={dispatch} toast={toast} />,
-      },
-    });
-  }
+function StageDots({ currentStage }) {
+  const currentIdx = ORDER_STAGES.indexOf(currentStage);
 
   return (
-    <div className="orders-view">
-      <div className="view-header">
-        <div>
-          <h1>Orders</h1>
-          <p className="text-muted">
-            {stats.total} orders &middot; {stats.pending} pending &middot; Revenue: {formatCurrency(stats.revenue)}
-          </p>
-        </div>
-      </div>
+    <div className="stage-dots">
+      {ORDER_STAGES.map((stage, idx) => {
+        let dotClass = 'stage-dots__dot';
+        if (idx < currentIdx) dotClass += ' stage-dots__dot--completed';
+        else if (idx === currentIdx) dotClass += ' stage-dots__dot--current';
+        else dotClass += ' stage-dots__dot--future';
 
-      <div className="stat-cards-row">
-        <div className="mini-stat"><span className="mini-stat__value">{stats.pending}</span><span className="mini-stat__label">Pending</span></div>
-        <div className="mini-stat"><span className="mini-stat__value">{stats.processing}</span><span className="mini-stat__label">Processing</span></div>
-        <div className="mini-stat"><span className="mini-stat__value">{stats.completed}</span><span className="mini-stat__label">Completed</span></div>
-        <div className="mini-stat"><span className="mini-stat__value">{formatCurrency(stats.revenue)}</span><span className="mini-stat__label">Revenue</span></div>
-      </div>
-
-      <div className="filter-bar">
-        <div className="filter-group">
-          <label>Status</label>
-          <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}>
-            <option value="All">All Statuses</option>
-            {ORDER_STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-          </select>
-        </div>
-        <div className="filter-group">
-          <label>Payment</label>
-          <select value={paymentFilter} onChange={e => setPaymentFilter(e.target.value)}>
-            <option value="All">All</option>
-            <option value="Paid">Paid</option>
-            <option value="Partial">Partial</option>
-            <option value="Unpaid">Unpaid</option>
-            <option value="Approved">Approved</option>
-          </select>
-        </div>
-      </div>
-
-      <div className="card">
-        <DataTable columns={columns} data={filtered} onRowClick={handleRowClick} searchQuery={state.searchQuery} />
-      </div>
+        return (
+          <span
+            key={stage}
+            className={dotClass}
+            style={idx <= currentIdx ? { background: STAGE_COLORS[currentStage] } : {}}
+            title={ORDER_STAGE_LABELS[stage]}
+          />
+        );
+      })}
     </div>
   );
 }
 
-function OrderDetail({ order, dispatch, toast }) {
-  function updateStatus(newStatus) {
-    dispatch({ type: 'UPDATE_ORDER', payload: { id: order.id, status: newStatus } });
-    dispatch({ type: 'CLOSE_MODAL' });
-    toast(`Order ${order.id} updated to ${newStatus}`, 'success');
-  }
+export default function OrdersView() {
+  const { state, dispatch } = useApp();
+
+  const filtered = useMemo(() => {
+    let result = state.orders;
+
+    if (state.orderPipelineFilter !== 'all') {
+      result = result.filter(o => o.stage === state.orderPipelineFilter);
+    }
+
+    if (state.orderPaymentFilter === 'paid') {
+      result = result.filter(o => o.paymentStatus === 'paid');
+    } else if (state.orderPaymentFilter === 'unpaid') {
+      result = result.filter(o => o.paymentStatus === 'due');
+    }
+
+    if (state.orderSearch) {
+      const q = state.orderSearch.toLowerCase();
+      result = result.filter(o =>
+        o.id.toLowerCase().includes(q) ||
+        o.product.toLowerCase().includes(q) ||
+        o.client.toLowerCase().includes(q)
+      );
+    }
+
+    result = [...result].sort((a, b) => {
+      if (state.orderSort === 'newest') return new Date(b.date) - new Date(a.date);
+      return new Date(a.date) - new Date(b.date);
+    });
+
+    return result;
+  }, [state.orders, state.orderPipelineFilter, state.orderPaymentFilter, state.orderSearch, state.orderSort]);
+
+  const stats = useMemo(() => {
+    const active = state.orders.filter(o => o.stage !== 'delivered');
+    const totalRevenue = state.orders.reduce((s, o) => s + o.total, 0);
+    const outstanding = state.orders.reduce((s, o) => s + o.amountDue, 0);
+    const rushCount = state.orders.filter(o => o.rush).length;
+    return { active: active.length, totalRevenue, outstanding, rushCount };
+  }, [state.orders]);
 
   return (
-    <div className="detail-grid">
-      <div className="detail-row"><span className="detail-label">Customer</span><span>{order.customerName}</span></div>
-      <div className="detail-row"><span className="detail-label">Order Date</span><span>{formatDate(order.orderDate)}</span></div>
-      <div className="detail-row"><span className="detail-label">Status</span><StatusBadge status={order.status} /></div>
-      <div className="detail-row"><span className="detail-label">Payment</span><span>{order.paymentMethod} — <StatusBadge status={order.paymentStatus} /></span></div>
+    <div className="orders-view">
+      <div className="view-header">
+        <h1 className="page-title">ORDERS</h1>
+        <div className="view-header__actions">
+          <button className="btn btn--outline">EXPORT ORDERS</button>
+          <button className="btn btn--primary">+ NEW ORDER</button>
+        </div>
+      </div>
 
-      <div className="detail-row detail-row--full">
-        <span className="detail-label">Items</span>
-        <table className="data-table data-table--compact" style={{ marginTop: '8px' }}>
-          <thead><tr><th>Item</th><th>Qty</th><th>Price</th></tr></thead>
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <span className="kpi-card__title">ACTIVE ORDERS</span>
+          <span className="kpi-card__value">{stats.active}</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-card__title">TOTAL REVENUE</span>
+          <span className="kpi-card__value">{formatCurrency(stats.totalRevenue)}</span>
+        </div>
+        <div className="kpi-card kpi-card--warning">
+          <span className="kpi-card__title">OUTSTANDING BALANCE</span>
+          <span className="kpi-card__value">{formatCurrency(stats.outstanding)}</span>
+        </div>
+        <div className="kpi-card">
+          <span className="kpi-card__title">RUSH ORDERS</span>
+          <span className="kpi-card__value">{stats.rushCount}</span>
+        </div>
+      </div>
+
+      <div className="orders-toolbar">
+        <div className="orders-toolbar__left">
+          <div className="search-bar search-bar--inline">
+            <svg className="search-bar__icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input
+              type="text"
+              className="search-bar__input"
+              placeholder="Search orders..."
+              value={state.orderSearch}
+              onChange={e => dispatch({ type: 'SET_ORDER_SEARCH', payload: e.target.value })}
+            />
+          </div>
+          <div className="filter-pills">
+            {['all', 'paid', 'unpaid'].map(f => (
+              <button
+                key={f}
+                className={`filter-pill ${state.orderPaymentFilter === f ? 'filter-pill--active' : ''}`}
+                onClick={() => dispatch({ type: 'SET_ORDER_PAYMENT_FILTER', payload: f })}
+              >
+                {f.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="orders-toolbar__right">
+          <select
+            className="sort-select"
+            value={state.orderSort}
+            onChange={e => dispatch({ type: 'SET_ORDER_SORT', payload: e.target.value })}
+          >
+            <option value="newest">NEWEST</option>
+            <option value="oldest">OLDEST</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="orders-table-wrapper">
+        <table className="orders-table">
+          <thead>
+            <tr>
+              <th>ORDER</th>
+              <th>PRODUCT / CLIENT</th>
+              <th>STAGE</th>
+              <th>TOTAL</th>
+              <th>PAYMENT</th>
+              <th>DUE</th>
+            </tr>
+          </thead>
           <tbody>
-            {order.items.map((item, i) => (
-              <tr key={i}><td>{item.name}</td><td>{item.quantity}</td><td>{formatCurrency(item.price)}</td></tr>
+            {filtered.map(order => (
+              <tr key={order.id} className="orders-table__row">
+                <td>
+                  <div className="order-id-cell">
+                    <span className="order-id">{order.id}</span>
+                    <span className="order-date">{formatDate(order.date)}</span>
+                  </div>
+                </td>
+                <td>
+                  <div className="order-product-cell">
+                    <span className="order-product">{order.product}</span>
+                    <span className="order-client">{order.client} &middot; {order.source}</span>
+                  </div>
+                </td>
+                <td>
+                  <div className="order-stage-cell">
+                    <StageDots currentStage={order.stage} />
+                    <span className="order-stage-label">{ORDER_STAGE_LABELS[order.stage]}</span>
+                  </div>
+                </td>
+                <td className="order-total">{formatCurrency(order.total)}</td>
+                <td>
+                  {order.paymentStatus === 'paid' ? (
+                    <span className="badge badge--success">PAID</span>
+                  ) : (
+                    <span className="badge badge--warning">{formatCurrency(order.amountDue)} DUE</span>
+                  )}
+                </td>
+                <td>
+                  <div className="order-due-cell">
+                    <span>{formatDate(order.dueDate)}</span>
+                    {order.rush && <span className="rush-badge">RUSH</span>}
+                  </div>
+                </td>
+              </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="detail-row"><span className="detail-label">Subtotal</span><span>{formatCurrency(order.subtotal)}</span></div>
-      <div className="detail-row"><span className="detail-label">Tax</span><span>{formatCurrency(order.tax)}</span></div>
-      <div className="detail-row"><span className="detail-label">Total</span><span className="font-bold">{formatCurrency(order.total)}</span></div>
-
-      {order.notes && (
-        <div className="detail-row detail-row--full"><span className="detail-label">Notes</span><p>{order.notes}</p></div>
-      )}
-
-      <div className="detail-actions">
-        <span className="detail-label">Update Status:</span>
-        <div className="btn-group">
-          {ORDER_STATUSES.filter(s => s !== order.status).slice(0, 4).map(s => (
-            <button key={s} className="btn btn--sm btn--outline" onClick={() => updateStatus(s)}>{s}</button>
-          ))}
-        </div>
+      <div className="orders-footer">
+        <span>{filtered.length} {state.orderPipelineFilter === 'all' ? 'ACTIVE' : ''} ORDERS</span>
+        <span>&middot;</span>
+        <span>{formatCurrency(filtered.reduce((s, o) => s + o.total, 0))} TOTAL REVENUE</span>
       </div>
     </div>
   );

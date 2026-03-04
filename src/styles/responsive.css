@@ -2,89 +2,56 @@
    Responsive Breakpoints
    ========================================================================== */
 
-/* ── Tablet (< 1024px) ── */
 @media (max-width: 1024px) {
     .kpi-grid { grid-template-columns: repeat(2, 1fr); }
-    .kpi-grid--3 { grid-template-columns: repeat(2, 1fr); }
-    .dashboard-grid { grid-template-columns: 1fr; }
-    .report-grid { grid-template-columns: 1fr; }
-    .tools-grid { grid-template-columns: 1fr; }
+    .spec-cards { grid-template-columns: repeat(2, 1fr); }
+    .products-grid { grid-template-columns: 1fr; }
 
-    .topbar__center { max-width: 300px; }
-    .topbar__username { display: none; }
+    .product-detail-panel {
+        width: 300px;
+    }
 }
 
-/* ── Mobile (< 768px) ── */
 @media (max-width: 768px) {
-    .topbar__menu-toggle { display: flex; }
-
     .sidebar {
         transform: translateX(-100%);
     }
 
-    .sidebar--open {
-        transform: translateX(0);
-    }
-
     .main {
         margin-left: 0;
+        padding: var(--space-4);
     }
-
-    .sidebar-collapsed .main {
-        margin-left: 0;
-    }
-
-    .topbar__center { display: none; }
 
     .kpi-grid { grid-template-columns: 1fr; }
-    .kpi-grid--3 { grid-template-columns: 1fr; }
+    .spec-cards { grid-template-columns: 1fr 1fr; }
 
-    .form-grid { grid-template-columns: 1fr; }
-
-    .filter-bar { flex-direction: column; }
-    .filter-group select { width: 100%; }
-
-    .stat-cards-row { flex-direction: column; }
-
-    .detail-grid { grid-template-columns: 1fr; }
-
-    .modal {
-        margin: var(--space-4);
-        max-height: 90vh;
-    }
-
-    .bar-chart__label { width: 80px; font-size: var(--text-xs); }
-    .bar-chart__value { width: 70px; font-size: var(--text-xs); }
-
-    .view-header {
+    .project-detail__header {
         flex-direction: column;
         gap: var(--space-3);
     }
 
-    .view-header .btn { align-self: flex-start; }
-}
-
-/* ── Small Mobile (< 480px) ── */
-@media (max-width: 480px) {
-    .topbar {
-        padding: 0 var(--space-3);
-    }
-
-    .topbar__right .topbar__action:not(:last-child) {
-        display: none;
-    }
-
-    .main {
+    .stage-progress {
+        overflow-x: auto;
         padding: var(--space-4);
     }
 
-    .tab-bar {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
+    .orders-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    .tab-btn {
-        white-space: nowrap;
-        flex-shrink: 0;
+    .products-view {
+        flex-direction: column;
+    }
+
+    .product-detail-panel {
+        width: 100%;
+        position: static;
+    }
+
+    .view-header {
+        flex-direction: column;
+        gap: var(--space-3);
+        align-items: flex-start;
     }
 }

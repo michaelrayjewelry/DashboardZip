@@ -1,32 +1,20 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import DashboardView from '../dashboard/DashboardView';
-import InventoryView from '../inventory/InventoryView';
+import ProjectsView from '../projects/ProjectsView';
+import ProductsView from '../products/ProductsView';
 import OrdersView from '../orders/OrdersView';
-import CustomersView from '../customers/CustomersView';
-import AppraisalsView from '../appraisals/AppraisalsView';
-import RepairsView from '../repairs/RepairsView';
-import CustomOrdersView from '../custom-orders/CustomOrdersView';
-import ReportsView from '../reports/ReportsView';
-import ToolsView from '../tools/ToolsView';
-import SettingsView from '../settings/SettingsView';
+import UsersView from '../users/UsersView';
 
 const ROUTE_MAP = {
-  dashboard: DashboardView,
-  inventory: InventoryView,
+  projects: ProjectsView,
+  products: ProductsView,
   orders: OrdersView,
-  customers: CustomersView,
-  appraisals: AppraisalsView,
-  repairs: RepairsView,
-  'custom-orders': CustomOrdersView,
-  reports: ReportsView,
-  tools: ToolsView,
-  settings: SettingsView,
+  users: UsersView,
 };
 
 export default function MainContent() {
   const { state } = useApp();
-  const ViewComponent = ROUTE_MAP[state.activeRoute] || DashboardView;
+  const ViewComponent = ROUTE_MAP[state.activeRoute] || ProjectsView;
 
   return (
     <main className="main">
